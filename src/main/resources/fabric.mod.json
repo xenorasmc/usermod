@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "xenoras",
+	"version": "${version}",
+	"name": "Xenoras",
+	"description": "Xenoras mod for building personal bridges on the user's side",
+	"authors": [
+		"paveli1!"
+	],
+	"contact": {
+		"homepage": "https://discord.gg/yqDn7czKJy",
+		"sources": "http://xenoras.xyz/source"
+	},
+	"license": "MIT",
+	"icon": "assets/xenoras/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.paveli1.xenoras.Xenoras"
+		],
+		"fabric-datagen": [
+			"com.paveli1.xenoras.XenorasDataGenerator"
+		]
+	},
+	"mixins": [
+		"xenoras.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.15.11",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
