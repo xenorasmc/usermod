@@ -1,6 +1,5 @@
 package com.paveli1.xenoras;
 
-import com.github.alexdlaird.ngrok.NgrokClient;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
@@ -19,7 +18,6 @@ import java.util.Scanner;
 public class Xenoras implements ModInitializer {
 	public static final String MOD_ID = "xenoras";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	final NgrokClient ngrokClient = new NgrokClient.Builder().build();
 	final String url = "https://raw.githubusercontent.com/xenorasmc/xbridge/main/now.txt";
 
 	@Override
