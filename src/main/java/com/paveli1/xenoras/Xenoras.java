@@ -1,7 +1,6 @@
 package com.paveli1.xenoras;
 
 import com.github.alexdlaird.ngrok.NgrokClient;
-import com.github.alexdlaird.ngrok.protocol.Tunnel;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
@@ -11,14 +10,17 @@ import net.minecraft.client.option.ServerList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 
 public class Xenoras implements ModInitializer {
 	public static final String MOD_ID = "xenoras";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	final NgrokClient ngrokClient = new NgrokClient.Builder().build();
-	final String ntoken = "1lwT0aYuNgJQmEiLi1dwIMN65wu_2pm1RiDs7GRT1XNozEEiq";
+	final String url = "https://raw.githubusercontent.com/xenorasmc/xbridge/main/now.txt";
 
 	@Override
 	public void onInitialize() {
@@ -41,15 +43,27 @@ public class Xenoras implements ModInitializer {
 			return true;
 		});
 
-		ngrokClient.setAuthToken(ntoken);
-		final List<Tunnel> tunnels = ngrokClient.getTunnels();
-		LOGGER.info(tunnels.get(0).getPublicUrl());
-		ServerInfo mainbridge = new ServerInfo("Xenoras", "93.158.194.211", false);
+        ServerInfo mainbridge = new ServerInfo("Xenoras", "93.158.194.211", false);
+        try {
+            mainbridge = new ServerInfo("Xenoras", readStringFromURL(url), false);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
-		ServerList servers = new ServerList(MinecraftClient.getInstance());
+        ServerList servers = new ServerList(MinecraftClient.getInstance());
 		servers.add(mainbridge, false);
 		servers.saveFile();
 
 		LOGGER.info("xenoras bridge loaded :)");
+	}
+
+	public static String readStringFromURL(String requestURL) throws IOException
+	{
+		try (Scanner scanner = new Scanner(new URL(requestURL).openStream(),
+                StandardCharsets.UTF_8))
+		{
+			scanner.useDelimiter("\\A");
+			return scanner.hasNext() ? scanner.next() : "";
+		}
 	}
 }
