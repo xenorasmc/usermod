@@ -8,8 +8,8 @@
 		"paveli1!"
 	],
 	"contact": {
-		"homepage": "https://discord.gg/yqDn7czKJy",
-		"sources": "http://xenoras.xyz/source"
+		"homepage": "http://xenoras.xyz/",
+		"sources": "https://github.com/xenorasmc/usermod/"
 	},
 	"license": "MIT",
 	"icon": "assets/xenoras/icon.png",
