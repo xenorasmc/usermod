@@ -9,11 +9,11 @@ class NgrokApi():
         self.port = port
 
     def start(self) -> None:
-        self.tunnel = ngrok.connect(self.host+str(self.port), "tcp")
+        self.tunnel = ngrok.connect(self.host+":"+str(self.port), "tcp")
 
     def update(self) -> None:
         ngrok.disconnect(self.tunnel.public_url)
-        self.tunnel = ngrok.connect(self.host+str(self.port), "tcp")
+        self.tunnel = ngrok.connect(self.host+":"+str(self.port), "tcp")
 
     def gethost(self) -> str:
         return self.tunnel.public_url.replace("tcp://", "")
