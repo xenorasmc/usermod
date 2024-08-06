@@ -3,7 +3,9 @@
 	"package": "com.paveli1.xenoras.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"ExampleMixin"
+	],
+	"client": [
+		"onServerConnection"
 	],
 	"injectors": {
 		"defaultRequire": 1
