@@ -12,13 +12,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 public class UpdatesGithub {
-    private static class GithubApi{
+    public static class GithubApi{
         public static String api = "https://api.github.com/";
         public static String repo = api+"repos/xenorasmc/usermod";
         public static class releases {
             public static String list = api+"repos/xenorasmc/usermod/releases";
             public static String latest = list+"/latest";
         }
+
+        public static String pageReleases = "https://github.com/xenorasmc/usermod/releases";
+        public static String pageRepo = "https://github.com/xenorasmc/usermod";
     }
 
     public static class Update {
@@ -39,7 +42,7 @@ public class UpdatesGithub {
             HttpResponse responseGet = client.execute(get);
             HttpEntity resEntityGet = responseGet.getEntity();
             JSONObject resp = new JSONObject(EntityUtils.toString(resEntityGet));
-            String version = resp.get("tag_name").toString();
+            String version = resp.getString("tag_name");
             return new Update(version, checkNeed(version));
         } catch (IOException e) {
             return new Update("0.0.0", false);
@@ -47,6 +50,7 @@ public class UpdatesGithub {
     }
 
     private static boolean checkNeed(String version) {
+        Xenoras.LOGGER.info(version+" "+Xenoras.VERSION);
         return Integer.parseInt(version.replace(".", "")) > Integer.parseInt(Xenoras.VERSION.replace(".", ""));
     }
 }

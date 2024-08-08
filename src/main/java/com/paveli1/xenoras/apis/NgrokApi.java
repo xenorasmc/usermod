@@ -27,12 +27,12 @@ public class NgrokApi {
                 try {
                     return getHostport(resp);
                 } catch (Exception err) {
-                    Xenoras.LOGGER.error(err.toString());
+                    System.out.println(err.toString());
                     return null;
                 }
             }
         } catch (IOException err) {
-            Xenoras.LOGGER.error(err.toString());
+            System.out.println(err.toString());
             return null;
         }
         return null;

@@ -1,19 +1,26 @@
 {
-  "text.config.xenoras-config.title": "Xenoras Settings",
+  "text.config.xenoras-config.title": "Xenoras settings",
 
-  "text.config.xenoras-config.section.BridgeSettings": "Server Settings",
-  "text.config.xenoras-config.section.LoginSettings": "Auto Login Settings",
-  "text.config.xenoras-config.section.CustomDiscsSettings": "Custom Discs Settings",
+  "text.config.xenoras-config.section.BridgeSettings": "Server settings",
+  "text.config.xenoras-config.section.LoginSettings": "Auto login settings",
+  "text.config.xenoras-config.section.CustomDiscsSettings": "Custom discs settings",
+  "text.config.xenoras-config.section.UpdateSettings": "Update settings",
+  "text.config.xenoras-config.section.ChatCommands": "Chat Commands",
 
-  "text.config.xenoras-config.option.ServerName": "Server Name",
+  "text.config.xenoras-config.option.ServerName": "Server name",
   "text.config.xenoras-config.option.Bridge": "Host (provider)",
-  "text.config.xenoras-config.option.useAutoLogin": "Auto Login",
+  "text.config.xenoras-config.option.useAutoLogin": "Auto login",
   "text.config.xenoras-config.option.Password": "Password",
+  "text.config.xenoras-config.option.useAutoUpdate": "Auto update",
+  "text.config.xenoras-config.option.useUpdateNotificator": "Update notification",
+  "text.config.xenoras-config.option.useChatCommands": "Use",
+  "text.config.xenoras-config.option.commandPrefix": "Command prefix",
+  "text.config.xenoras-config.option.commandPrefix.tooltip": "Only special characters are allowed!",
 
   "text.config.xenoras-config.enum.bridgeChoices.ngrok": "Ngrok",
   "text.config.xenoras-config.enum.bridgeChoices.official": "Official",
 
-  "text.config.xenoras-config.category.eAccount": "Additional Account",
+  "text.config.xenoras-config.category.eAccount": "Additional account",
   "text.config.xenoras-config.option.eAccount.useEAccount": "Use",
   "text.config.xenoras-config.option.eAccount.Username": "Username",
   "text.config.xenoras-config.option.eAccount.Password": "Password"

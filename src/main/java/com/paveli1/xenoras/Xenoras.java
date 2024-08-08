@@ -1,6 +1,7 @@
 package com.paveli1.xenoras;
 
 import com.paveli1.xenoras.apis.NgrokApi;
+import com.paveli1.xenoras.apis.UpdatesGithub;
 import com.paveli1.xenoras.apis.XenorasConfig;
 import com.paveli1.xenoras.apis.ConfigModel;
 import com.paveli1.xenoras.listeners.SystemListener;
@@ -12,14 +13,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import net.minecraft.text.Text;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -27,9 +24,8 @@ import java.util.Scanner;
 
 
 public class Xenoras implements ModInitializer {
-	public static final JSONObject INFO = getModInfo();
 	public static final String MOD_ID = "xenoras";
-	public static final String VERSION = INFO.getString("version");
+	public static final String VERSION = "1.2.0";
 	public static final String CHAT_CODE = "§l§8[§cXenoras§8]§f§r ";
 	public static final String OFFICIAL_HOST = "93.158.194.211";
 	public static final String NGROK_HOST = NgrokApi.getEndpoint();
@@ -37,28 +33,11 @@ public class Xenoras implements ModInitializer {
 	public static final XenorasConfig CONFIG = XenorasConfig.createAndLoad();
 	public static ServerStatus server;
 
-	private static JSONObject getModInfo() {
-		InputStream ioStream = Xenoras.class.getClassLoader().getResourceAsStream("fabric.mod.json");
-		if (ioStream == null) {
-			throw new IllegalArgumentException("fabric.mod.json is not found");
-		}
-		try (InputStreamReader isr = new InputStreamReader(ioStream); BufferedReader br = new BufferedReader(isr);)
-		{
-			String jsonstring = "";
-			String line;
-			while ((line = br.readLine()) != null) {
-				jsonstring += line;
-			}
-			ioStream.close();
-			return new JSONObject(jsonstring);
-		} catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 	@Override
 	public void onInitialize() {
 		ClientSendMessageEvents.ALLOW_CHAT.register((message) -> {
+			if (server == null) return true;
+			if (!OFFICIAL_HOST.equals(server.address()) && !Objects.requireNonNullElse(NGROK_HOST, "null").equals(server.address())) return true;
 
 //			if (message.contains("#bridge")) {
 //				this.client
@@ -70,13 +49,38 @@ public class Xenoras implements ModInitializer {
 //				}
 //				return false;
 //			}
-			if (message.contains("#usedip")) {
-				xsend("connected via "+server.address());
-				return false;
-			}
-			if (message.contains("#updatecheck")) {
-				xsend("no updates now.");
-				return false;
+			if (message.contains(CONFIG.commandPrefix()) && CONFIG.useChatCommands() && !CONFIG.commandPrefix().isEmpty()) {
+				if (message.contains("usedip")) {
+					xsend("connected via "+server.address());
+					return false;
+				}
+				else if (message.contains("update")) {
+					if (message.contains("check")) {
+						Runnable check = () -> {
+							UpdatesGithub.Update update = UpdatesGithub.getLastUpdate();
+							LOGGER.info("last version on github: "+update.version);
+							if (update.need) {
+								xsend("§2Update %v is available! You can use command §4#update install§2 or download it from github".replace("%v", update.version));
+							}
+							else {
+								xsend("§4No updates yet... Version %p is latest".replace("%p", VERSION));
+							}
+						};
+						Thread thread = new Thread(check);
+						thread.start();
+					}
+					else if (message.contains("install")) {
+						return false;
+					}
+					else {
+						xsend("unknown command.");
+					}
+					return false;
+				}
+				else {
+					xsend("unknown command.");
+					return false;
+				}
 			}
 
 			return true;

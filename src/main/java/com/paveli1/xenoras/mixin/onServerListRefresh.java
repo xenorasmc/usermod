@@ -14,13 +14,16 @@ public class onServerListRefresh {
 
     @Inject(method = "refresh()V", at = @At(value = "HEAD"))
     private void refreshCatcher(CallbackInfo ci) {
-        Xenoras.CONFIG.load();
-        if (Xenoras.CONFIG.Bridge().equals(ConfigModel.BridgeChoices.NGROK)) {
-            Xenoras.changeAddress(NgrokApi.getEndpoint());
-        }
-        else {
-            Xenoras.changeAddress(Xenoras.OFFICIAL_HOST);
-        }
+        Runnable refresh = () -> {
+            Xenoras.CONFIG.load();
+            if (Xenoras.CONFIG.Bridge().equals(ConfigModel.BridgeChoices.NGROK)) {
+                Xenoras.changeAddress(NgrokApi.getEndpoint());
+            } else {
+                Xenoras.changeAddress(Xenoras.OFFICIAL_HOST);
+            }
+        };
+        Thread thread = new Thread(refresh);
+        thread.start();
     }
 
 }
