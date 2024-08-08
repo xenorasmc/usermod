@@ -12,10 +12,14 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
 import net.minecraft.text.Text;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -23,13 +27,34 @@ import java.util.Scanner;
 
 
 public class Xenoras implements ModInitializer {
+	public static final JSONObject INFO = getModInfo();
 	public static final String MOD_ID = "xenoras";
+	public static final String VERSION = INFO.getString("version");
 	public static final String CHAT_CODE = "§l§8[§cXenoras§8]§f§r ";
 	public static final String OFFICIAL_HOST = "93.158.194.211";
 	public static final String NGROK_HOST = NgrokApi.getEndpoint();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final XenorasConfig CONFIG = XenorasConfig.createAndLoad();
 	public static ServerStatus server;
+
+	private static JSONObject getModInfo() {
+		InputStream ioStream = Xenoras.class.getClassLoader().getResourceAsStream("fabric.mod.json");
+		if (ioStream == null) {
+			throw new IllegalArgumentException("fabric.mod.json is not found");
+		}
+		try (InputStreamReader isr = new InputStreamReader(ioStream); BufferedReader br = new BufferedReader(isr);)
+		{
+			String jsonstring = "";
+			String line;
+			while ((line = br.readLine()) != null) {
+				jsonstring += line;
+			}
+			ioStream.close();
+			return new JSONObject(jsonstring);
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 	@Override
 	public void onInitialize() {

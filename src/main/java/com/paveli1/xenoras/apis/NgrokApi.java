@@ -1,5 +1,6 @@
 package com.paveli1.xenoras.apis;
 
+import com.paveli1.xenoras.Xenoras;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -26,10 +27,12 @@ public class NgrokApi {
                 try {
                     return getHostport(resp);
                 } catch (Exception err) {
+                    Xenoras.LOGGER.error(err.toString());
                     return null;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException err) {
+            Xenoras.LOGGER.error(err.toString());
             return null;
         }
         return null;
