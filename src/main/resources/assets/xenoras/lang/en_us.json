@@ -1,0 +1,20 @@
+{
+  "text.config.xenoras-config.title": "Xenoras Settings",
+
+  "text.config.xenoras-config.section.BridgeSettings": "Server Settings",
+  "text.config.xenoras-config.section.LoginSettings": "Auto Login Settings",
+  "text.config.xenoras-config.section.CustomDiscsSettings": "Custom Discs Settings",
+
+  "text.config.xenoras-config.option.ServerName": "Server Name",
+  "text.config.xenoras-config.option.Bridge": "Host (provider)",
+  "text.config.xenoras-config.option.useAutoLogin": "Auto Login",
+  "text.config.xenoras-config.option.Password": "Password",
+
+  "text.config.xenoras-config.enum.bridgeChoices.ngrok": "Ngrok",
+  "text.config.xenoras-config.enum.bridgeChoices.official": "Official",
+
+  "text.config.xenoras-config.category.eAccount": "Additional Account",
+  "text.config.xenoras-config.option.eAccount.useEAccount": "Use",
+  "text.config.xenoras-config.option.eAccount.Username": "Username",
+  "text.config.xenoras-config.option.eAccount.Password": "Password"
+}

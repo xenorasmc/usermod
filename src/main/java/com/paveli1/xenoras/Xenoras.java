@@ -8,11 +8,9 @@ import net.fabricmc.api.ModInitializer;
 import com.paveli1.xenoras.structures.ServerStatus;
 
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.ServerList;
-import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,12 +57,7 @@ public class Xenoras implements ModInitializer {
 			return true;
 		});
 
-		ServerInfo mainbridge = null;
-		if (CONFIG.Bridge().equals(ConfigModel.BridgeChoices.OFFICIAL)) {
-        	mainbridge = new ServerInfo(CONFIG.ServerName(), OFFICIAL_HOST, false);
-		} else {
-            mainbridge = new ServerInfo(CONFIG.ServerName(), Objects.requireNonNullElse(NGROK_HOST, OFFICIAL_HOST), false);
-		}
+		ServerInfo mainbridge = getMainBridge();
 
         ServerList servers = new ServerList(MinecraftClient.getInstance());
 		boolean isXenorasAdded = false;
@@ -77,6 +70,7 @@ public class Xenoras implements ModInitializer {
 				}
 				isXenorasAdded = true;
 				LOGGER.info("xenoras was found in the server list.");
+				break;
 			}
 		}
 		if (!isXenorasAdded) {
@@ -132,6 +126,27 @@ public class Xenoras implements ModInitializer {
 				MinecraftClient.getInstance().player.sendMessage(Text.of(CHAT_CODE+msg));
 			}
 		}
+	}
+
+	public static ServerInfo getMainBridge() {
+		if (CONFIG.Bridge().equals(ConfigModel.BridgeChoices.OFFICIAL)) {
+			return new ServerInfo(CONFIG.ServerName(), OFFICIAL_HOST, false);
+		} else {
+			return new ServerInfo(CONFIG.ServerName(), Objects.requireNonNullElse(NGROK_HOST, OFFICIAL_HOST), false);
+		}
+	}
+
+	public static void changeAddress(String address) {
+		ServerList servers = new ServerList(MinecraftClient.getInstance());
+		servers.loadFile();
+		for (int i = 0; i < servers.size(); i++) {
+			if (servers.get(i).name.equals("Xenoras")) {
+				if (servers.get(i).address.equals(address)) return;
+				servers.get(i).address = address;
+				break;
+			}
+		}
+		servers.saveFile();
 	}
 }
 

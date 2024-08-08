@@ -1,0 +1,20 @@
+{
+  "text.config.xenoras-config.title": "Настройки Xenoras",
+
+  "text.config.xenoras-config.section.BridgeSettings": "Настройки сервера",
+  "text.config.xenoras-config.section.LoginSettings": "Настройки Авто Входа",
+  "text.config.xenoras-config.section.CustomDiscsSettings": "Настройки Кастомных Пластинок",
+
+  "text.config.xenoras-config.option.ServerName": "Имя Сервера",
+  "text.config.xenoras-config.option.Bridge": "Адрес (источник)",
+  "text.config.xenoras-config.option.useAutoLogin": "Авто Вход",
+  "text.config.xenoras-config.option.Password": "Пароль",
+
+  "text.config.xenoras-config.enum.bridgeChoices.ngrok": "Ngrok",
+  "text.config.xenoras-config.enum.bridgeChoices.official": "Официальный",
+
+  "text.config.xenoras-config.category.eAccount": "Дополнительный Аккаунт",
+  "text.config.xenoras-config.option.eAccount.useEAccount": "Использовать",
+  "text.config.xenoras-config.option.eAccount.Username": "Игровой Ник",
+  "text.config.xenoras-config.option.eAccount.Password": "Пароль"
+}

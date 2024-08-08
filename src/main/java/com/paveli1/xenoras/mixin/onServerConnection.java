@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import com.paveli1.xenoras.Xenoras;
 
-import java.util.regex.Pattern;
-
 @Mixin(ConnectScreen.class)
 public class onServerConnection {
 

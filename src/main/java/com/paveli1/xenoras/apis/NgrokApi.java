@@ -2,18 +2,20 @@ package com.paveli1.xenoras.apis;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class NgrokApi {
     final static String API_URL = "https://api.ngrok.com/";
     final static String API_KEY = "2kGOxTlm3AUMLECJuqmcFQK8LS9_4YFXJ96ovhGM6YVZ6wNNN";
 
     public static String getEndpoint() {
-        try {
-            HttpClient client = new DefaultHttpClient();
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
             HttpGet get = new HttpGet(API_URL + "endpoints");
             get.addHeader("authorization", "Bearer " + API_KEY);
             get.addHeader("ngrok-version", "2");
@@ -22,17 +24,22 @@ public class NgrokApi {
             if (resEntityGet != null) {
                 String resp = EntityUtils.toString(resEntityGet);
                 try {
-                    return findHosport(resp);
+                    return getHostport(resp);
                 } catch (Exception err) {
                     return null;
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             return null;
         }
         return null;
     }
-    public static String findHosport(String input) {
+
+    private static String getHostport(String input) {
+        return new JSONObject(input).getJSONArray("endpoints").getJSONObject(0).getString("hostport");
+    }
+
+    private static String findHosport(String input) {
         input = input.replace("\"", "'");
         String a = "";
         String result = "";
