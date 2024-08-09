@@ -17,7 +17,7 @@ public class onServerListRefresh {
         Runnable refresh = () -> {
             Xenoras.CONFIG.load();
             if (Xenoras.CONFIG.Bridge().equals(ConfigModel.BridgeChoices.NGROK)) {
-                Xenoras.changeAddress(NgrokApi.getEndpoint());
+                Xenoras.changeAddress(NgrokApi.getMinecraftAddress());
             } else {
                 Xenoras.changeAddress(Xenoras.OFFICIAL_HOST);
             }

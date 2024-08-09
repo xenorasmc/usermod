@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -26,6 +27,78 @@ public class NgrokApi {
                 String resp = EntityUtils.toString(resEntityGet);
                 try {
                     return getHostport(resp);
+                } catch (Exception err) {
+                    System.out.println(err.toString());
+                    return null;
+                }
+            }
+        } catch (IOException err) {
+            System.out.println(err.toString());
+            return null;
+        }
+        return null;
+    }
+
+    public static String getDiscServerAddress() {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpGet get = new HttpGet(API_URL + "endpoints");
+            get.addHeader("authorization", "Bearer " + API_KEY);
+            get.addHeader("ngrok-version", "2");
+            HttpResponse responseGet = client.execute(get);
+            HttpEntity resEntityGet = responseGet.getEntity();
+            if (resEntityGet != null) {
+                String resp = EntityUtils.toString(resEntityGet);
+                try {
+                    JSONArray points = new JSONObject(resp).getJSONArray("endpoints");
+                    String port;
+                    for (int i = 0 ; i < points.length(); i++) {
+                        get = new HttpGet(points.getJSONObject(i).getJSONObject("tunnel").getString("uri"));
+                        get.addHeader("authorization", "Bearer " + API_KEY);
+                        get.addHeader("ngrok-version", "2");
+                        responseGet = client.execute(get);
+                        resEntityGet = responseGet.getEntity();
+                        if (resEntityGet != null) {
+                            resp = EntityUtils.toString(resEntityGet);
+                            port = new JSONObject(resp).getString("forwards_to").split(":")[1];
+                            if (port.equals("25566")) return points.getJSONObject(i).getString("hostport");
+                        }
+                    }
+                } catch (Exception err) {
+                    System.out.println(err.toString());
+                    return null;
+                }
+            }
+        } catch (IOException err) {
+            System.out.println(err.toString());
+            return null;
+        }
+        return null;
+    }
+
+    public static String getMinecraftAddress() {
+        try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
+            HttpGet get = new HttpGet(API_URL + "endpoints");
+            get.addHeader("authorization", "Bearer " + API_KEY);
+            get.addHeader("ngrok-version", "2");
+            HttpResponse responseGet = client.execute(get);
+            HttpEntity resEntityGet = responseGet.getEntity();
+            if (resEntityGet != null) {
+                String resp = EntityUtils.toString(resEntityGet);
+                try {
+                    JSONArray points = new JSONObject(resp).getJSONArray("endpoints");
+                    String port;
+                    for (int i = 0 ; i < points.length(); i++) {
+                        get = new HttpGet(points.getJSONObject(i).getJSONObject("tunnel").getString("uri"));
+                        get.addHeader("authorization", "Bearer " + API_KEY);
+                        get.addHeader("ngrok-version", "2");
+                        responseGet = client.execute(get);
+                        resEntityGet = responseGet.getEntity();
+                        if (resEntityGet != null) {
+                            resp = EntityUtils.toString(resEntityGet);
+                            port = new JSONObject(resp).getString("forwards_to").split(":")[1];
+                            if (port.equals("25565")) return points.getJSONObject(i).getString("hostport");
+                        }
+                    }
                 } catch (Exception err) {
                     System.out.println(err.toString());
                     return null;

@@ -1,4 +1,5 @@
 from pyngrok import ngrok
+from modules.hostapi.tcpapi import SocketAPI
 import os
 
 class NgrokApi():
@@ -16,10 +17,16 @@ class NgrokApi():
 
     def start(self) -> None:
         self.tunnel = ngrok.connect(self.host+":"+str(self.port), "tcp")
+        self.tunnel2 = ngrok.connect(self.host+":"+str(self.port+1), "tcp")
 
     def update(self) -> None:
         ngrok.disconnect(self.tunnel.public_url)
+        ngrok.disconnect(self.tunnel2.public_url)
         self.tunnel = ngrok.connect(self.host+":"+str(self.port), "tcp")
+        self.tunnel2 = ngrok.connect(self.host+":"+str(self.port+1), "tcp")
 
     def gethost(self) -> str:
         return self.tunnel.public_url.replace("tcp://", "")
+
+    def gethostDiscs(self) -> str:
+        return self.tunnel2.public_url.replace("tcp://", "")

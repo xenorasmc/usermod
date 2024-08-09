@@ -39,6 +39,9 @@ replay_*.log
 *.hprof
 *.jfr
 /xenorasapi/papasha/assets/
+/xenorasapi/papasha/modules/db.py
 /xenorasapi/papasha/dbs/
 /xenorasapi/papasha/config.py
 /xenorasapi/papasha/main.py
+/xenorasapi/papasha/tests/test.exe
+/tests/

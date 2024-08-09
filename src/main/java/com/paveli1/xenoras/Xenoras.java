@@ -1,9 +1,7 @@
 package com.paveli1.xenoras;
 
-import com.paveli1.xenoras.apis.NgrokApi;
-import com.paveli1.xenoras.apis.UpdatesGithub;
+import com.paveli1.xenoras.apis.*;
 import com.paveli1.xenoras.apis.XenorasConfig;
-import com.paveli1.xenoras.apis.ConfigModel;
 import com.paveli1.xenoras.listeners.SystemListener;
 import net.fabricmc.api.ModInitializer;
 import com.paveli1.xenoras.structures.ServerStatus;
@@ -28,7 +26,7 @@ public class Xenoras implements ModInitializer {
 	public static final String VERSION = "1.2.0";
 	public static final String CHAT_CODE = "§l§8[§cXenoras§8]§f§r ";
 	public static final String OFFICIAL_HOST = "93.158.194.211";
-	public static final String NGROK_HOST = NgrokApi.getEndpoint();
+	public static final String NGROK_HOST = NgrokApi.getMinecraftAddress();
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final XenorasConfig CONFIG = XenorasConfig.createAndLoad();
 	public static ServerStatus server;
@@ -70,12 +68,109 @@ public class Xenoras implements ModInitializer {
 						thread.start();
 					}
 					else if (message.contains("install")) {
+						xsend("in next update");
 						return false;
 					}
 					else {
 						xsend("unknown command.");
 					}
 					return false;
+				}
+				else if (message.contains("disc")) {
+					if (message.split(" ")[1].equals("get")) {
+						if (!(message.split(" ").length == 3)) {
+							xsend("invalid command usage.");
+							return false;
+						}
+						Runnable get = () -> {
+							XenorasApi.Response resp = XenorasApi.getdics(message.split(" ")[2]);
+							if (!resp.status) {
+								xsend("§4error: "+resp.error);
+							}
+							else {
+								xsend("file exists.");
+								xsend(resp.response);
+							}
+						};
+						Thread thread = new Thread(get);
+						thread.start();
+						return false;
+					}
+					else if (message.split(" ")[1].equals("bytag")) {
+						String[] req = message.split(" ");
+						if (!(req.length == 3)) {
+							xsend("invalid command usage.");
+							return false;
+						}
+						Runnable bytag = () -> {
+							xsend("trying to find link for tag("+req[2]+")...");
+							XenorasApi.Response resp = XenorasApi.getdics(message.split(" ")[2]);
+							if (!resp.status) {
+								xsend("§4not found.");
+							}
+							else {
+								xsend("file exists. creating disc...");
+								try {
+									MinecraftClient.getInstance().player.networkHandler.sendChatCommand("disc burn "+resp.response);
+								} catch (Exception err) {
+									xsend("§4error: "+err.toString());
+								}
+							}
+						};
+						Thread thread = new Thread(bytag);
+						thread.start();
+						return false;
+					}
+					else if (message.split(" ")[1].equals("path")) {
+						if (!(message.split(" ").length == 3)) {
+							xsend("invalid command usage.");
+							return false;
+						}
+						xsend("Sending file to disc-server...");
+						Runnable get = () -> {
+							XenorasApi.Response resp = XenorasApi.diskbyfile(message.split(" ")[2]);
+							if (!resp.status) {
+								xsend("§4error: "+resp.error);
+							}
+							else {
+								xsend("file loaded. creating disc...");
+								try {
+									System.out.println("link from server: "+resp.response);
+									MinecraftClient.getInstance().player.networkHandler.sendChatCommand("disc burn "+resp.response);
+								} catch (Exception err) {
+									xsend("§4error: "+err.toString());
+								}
+							}
+						};
+						Thread thread = new Thread(get);
+						thread.start();
+						return false;
+					}
+					else {
+						String[] req = message.split(" ");
+						if (!(req.length == 2)) {
+							xsend("invalid command usage.");
+							return false;
+						}
+						Runnable bylink = () -> {
+							xsend("Sending link to disc-server...");
+							XenorasApi.Response resp = XenorasApi.diskbylink(message.split(" ")[1]);
+							if (!resp.status) {
+								xsend("§4error: "+resp.error);
+							}
+							else {
+								xsend("creating disc...");
+								try {
+									MinecraftClient.getInstance().player.networkHandler.sendChatCommand("disc burn "+resp.response);
+								} catch (Exception err) {
+									xsend("§4error: "+err.toString());
+								}
+							}
+						};
+						Thread thread = new Thread(bylink);
+						thread.start();
+						return false;
+					}
 				}
 				else {
 					xsend("unknown command.");
